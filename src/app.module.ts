@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection, getConnectionOptions } from 'typeorm';
-import configuration, { IConfig } from './config/configuration';
-import { UsersModule } from './users/users.module';
+import { Connection } from 'typeorm';
+import { UserModule } from './users/user.module';
 
 @Module({
   imports: [
@@ -13,19 +13,8 @@ import { UsersModule } from './users/users.module';
       load: [configuration],
       cache: true,
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: async (config: ConfigService<IConfig>) =>
-        Object.assign(await getConnectionOptions(), {
-          host: config.get<string>('host'),
-          username: config.get<string>('username'),
-          password: config.get<string>('password'),
-          database: config.get<string>('database'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'], // ! or "dist/**/*.entity{.ts,.js}"
-          migrations: [__dirname + '/migrations/*.{.ts,.js}'],
-          autoLoadEntities: true,
-        }),
-    }),
-    UsersModule,
+    TypeOrmModule.forRoot(),
+    UserModule,
   ],
   controllers: [],
   providers: [],

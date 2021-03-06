@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
 } from 'typeorm';
-import { UserEntity } from './../users/user.entity';
+import { UserEntity } from '../users/user.entity';
 
 @Entity('roles')
 export class RoleEntity extends BaseEntity {
