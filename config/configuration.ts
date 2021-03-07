@@ -9,9 +9,9 @@ export default registerAs('configData', () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    entities: ['src/**/*.entity.{ts,js}'],
+    entities: ['dist/**/*.entity.{ts,js}'],
     migrationsTableName: 'custom_migration_table',
-    migrations: ['migration/*.{ts,js}'],
+    migrations: ['dist/migration/*.{ts,js}'],
     cli: {
       migrationsDir: 'migration',
     },

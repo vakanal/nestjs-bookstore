@@ -8,11 +8,11 @@ import { TypeOrmConfigService } from '../config/TypeOrmConfigService';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      cache: true,
       envFilePath: ['.env.development'],
       isGlobal: true,
       load: [configuration],
     }),
-    // TypeOrmModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
