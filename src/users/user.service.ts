@@ -14,12 +14,12 @@ import { RoleEntity } from '../roles/role.entity';
 @Injectable()
 export class UserService {
   constructor(
-    private usersRepository: UserRepository,
+    private userRepository: UserRepository,
     private mapperService: MapperService,
   ) {}
 
   async getAll(): Promise<UserDto[]> {
-    const users: UserEntity[] = await this.usersRepository.find({
+    const users: UserEntity[] = await this.userRepository.find({
       where: { status: 'ACTIVE' },
     });
 
@@ -34,7 +34,7 @@ export class UserService {
       throw new BadRequestException('id must be sent');
     }
 
-    const user: UserEntity = await this.usersRepository.findOne(id, {
+    const user: UserEntity = await this.userRepository.findOne(id, {
       where: { status: 'ACTIVE' },
     });
 
@@ -53,7 +53,7 @@ export class UserService {
     const defaultRole = await repo.findOne({ where: { name: 'GENERAL' } });
     user.roles = [defaultRole];
 
-    const savedUser: UserEntity = await this.usersRepository.save(user);
+    const savedUser: UserEntity = await this.userRepository.save(user);
 
     return this.mapperService.map<UserEntity, UserDto>(
       savedUser,
@@ -62,11 +62,11 @@ export class UserService {
   }
 
   async update(id: number, user: UserEntity): Promise<void> {
-    await this.usersRepository.update(id, user);
+    await this.userRepository.update(id, user);
   }
 
   async delete(id: number): Promise<void> {
-    const userExists: UserEntity = await this.usersRepository.findOne(id, {
+    const userExists: UserEntity = await this.userRepository.findOne(id, {
       where: { status: 'ACTIVE' },
     });
 
@@ -74,6 +74,6 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    await this.usersRepository.update(id, { status: 'INACTIVE' });
+    await this.userRepository.update(id, { status: 'INACTIVE' });
   }
 }

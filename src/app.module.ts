@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './users/user.module';
+import { RoleModule } from './roles/role.module';
 import configuration from '../config/configuration';
 import { TypeOrmConfigService } from '../config/TypeOrmConfigService';
 
@@ -18,6 +19,7 @@ import { TypeOrmConfigService } from '../config/TypeOrmConfigService';
       useClass: TypeOrmConfigService,
     }),
     UserModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [],
