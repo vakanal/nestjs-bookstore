@@ -3,19 +3,31 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { UserDto } from './user.dto';
+import { getConnection } from 'typeorm';
 import { MapperService } from '../shared/mapper.service';
+import { UserRepository } from './user.repository';
+import { UserDto } from './user.dto';
+import { UserEntity } from './user.entity';
+import { UserDetailsEntity } from '../users-details/user-details.entity';
+import { RoleEntity } from '../roles/role.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity)
-    private usersRepository: Repository<UserEntity>,
+    private usersRepository: UserRepository,
     private mapperService: MapperService,
   ) {}
+
+  async getAll(): Promise<UserDto[]> {
+    const users: UserEntity[] = await this.usersRepository.find({
+      where: { status: 'ACTIVE' },
+    });
+
+    return this.mapperService.mapCollection<UserEntity, UserDto>(
+      users,
+      new UserDto(),
+    );
+  }
 
   async get(id: number): Promise<UserDto> {
     if (!id) {
@@ -33,18 +45,14 @@ export class UserService {
     return this.mapperService.map<UserEntity, UserDto>(user, new UserDto());
   }
 
-  async getAll(): Promise<UserDto[]> {
-    const users: UserEntity[] = await this.usersRepository.find({
-      where: { status: 'ACTIVE' },
-    });
+  async create(user: UserEntity): Promise<UserDto> {
+    const details = new UserDetailsEntity();
+    user.details = details;
 
-    return this.mapperService.mapCollection<UserEntity, UserDto>(
-      users,
-      new UserDto(),
-    );
-  }
+    const repo = getConnection().getRepository(RoleEntity);
+    const defaultRole = await repo.findOne({ where: { name: 'GENERAL' } });
+    user.roles = [defaultRole];
 
-  async createUser(user: UserEntity): Promise<UserDto> {
     const savedUser: UserEntity = await this.usersRepository.save(user);
 
     return this.mapperService.map<UserEntity, UserDto>(
@@ -53,11 +61,11 @@ export class UserService {
     );
   }
 
-  async updateUser(id: number, user: UserEntity): Promise<void> {
+  async update(id: number, user: UserEntity): Promise<void> {
     await this.usersRepository.update(id, user);
   }
 
-  async deleteUser(id: number): Promise<void> {
+  async delete(id: number): Promise<void> {
     const userExists: UserEntity = await this.usersRepository.findOne(id, {
       where: { status: 'ACTIVE' },
     });

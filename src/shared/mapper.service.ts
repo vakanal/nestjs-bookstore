@@ -27,12 +27,10 @@ export class MapperService extends TypeMapper {
       .map(
         (entity) => entity.details,
         (dto) => dto.details,
-      );
-    /*
+      )
       .map(
         (entity) => entity.roles,
         (dto) => dto.roles,
-      )
-      */
+      );
   }
 }
