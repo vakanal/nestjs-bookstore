@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
 import { UserModule } from './users/user.module';
+import configuration from '../config/configuration';
+import { TypeOrmConfigService } from '../config/TypeOrmConfigService';
 
 @Module({
   imports: [
@@ -11,14 +11,15 @@ import { UserModule } from './users/user.module';
       envFilePath: ['.env.development'],
       isGlobal: true,
       load: [configuration],
-      cache: true,
     }),
-    TypeOrmModule.forRoot(),
+    // TypeOrmModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
+    }),
     UserModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-  constructor(private connection: Connection) {}
-}
+export class AppModule {}
