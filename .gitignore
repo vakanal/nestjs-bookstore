@@ -40,4 +40,4 @@ lerna-debug.log*
 ormconfig.json
 
 # YAML Config
-/config/config.yml
+/config/config.yaml
