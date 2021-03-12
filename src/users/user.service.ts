@@ -3,15 +3,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { getConnection } from 'typeorm';
 import { UserRepository } from './user.repository';
 import { UserEntity } from './user.entity';
-import { UserDetailsEntity } from '../users-details/user-details.entity';
+import { RoleRepository } from '../roles/role.repository';
 import { RoleEntity } from '../roles/role.entity';
+import { UserDetailsEntity } from '../users-details/user-details.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
+  ) {}
 
   async getAll(): Promise<UserEntity[]> {
     const users: UserEntity[] = await this.userRepository.find({
@@ -41,8 +44,9 @@ export class UserService {
     const details = new UserDetailsEntity();
     user.details = details;
 
-    const repo = getConnection().getRepository(RoleEntity);
-    const defaultRole = await repo.findOne({ where: { name: 'GENERAL' } });
+    const defaultRole: RoleEntity = await this.roleRepository.findOne({
+      where: { name: 'GENERAL' },
+    });
     user.roles = [defaultRole];
 
     const savedUser: UserEntity = await this.userRepository.save(user);
