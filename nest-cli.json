@@ -2,8 +2,12 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "include": "../config/*.yaml",
-    "outDir": "./dist/config",
-    "watchAssets": true
+    "assets": [
+      {
+        "include": "./config/*.yaml",
+        "outDir": "./dist/config",
+        "watchAssets": true
+      }
+    ]
   }
 }
