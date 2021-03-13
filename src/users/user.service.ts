@@ -5,9 +5,10 @@ import {
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { UserEntity } from './user.entity';
+import { UserDetailsEntity } from '../users-details/user-details.entity';
 import { RoleRepository } from '../roles/role.repository';
 import { RoleEntity } from '../roles/role.entity';
-import { UserDetailsEntity } from '../users-details/user-details.entity';
+import { RoleType } from '../roles/roletype.enum';
 
 @Injectable()
 export class UserService {
@@ -45,7 +46,7 @@ export class UserService {
     user.details = details;
 
     const defaultRole: RoleEntity = await this.roleRepository.findOne({
-      where: { name: 'GENERAL' },
+      where: { name: RoleType.GENERAL },
     });
     user.roles = [defaultRole];
 

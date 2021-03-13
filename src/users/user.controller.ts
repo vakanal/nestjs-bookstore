@@ -7,20 +7,24 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getUsers(): Promise<UserEntity[]> {
     const users = await this.userService.getAll();
     return users;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
     const user = await this.userService.get(id);
