@@ -12,13 +12,13 @@ import { SignUpDto, SignInDto } from './dtos';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/signup')
+  @Post('signup')
   @UsePipes(new ValidationPipe({ transform: true }))
   async signup(@Body() signupDto: SignUpDto): Promise<void> {
     return this.authService.signup(signupDto);
   }
 
-  @Post('/signin')
+  @Post('signin')
   @UsePipes(new ValidationPipe({ transform: true }))
   async signin(@Body() signinDto: SignInDto): Promise<{ token: string }> {
     return this.authService.signin(signinDto);

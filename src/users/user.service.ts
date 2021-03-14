@@ -9,6 +9,7 @@ import { UserDetailsEntity } from '../users-details/user-details.entity';
 import { RoleRepository } from '../roles/role.repository';
 import { RoleEntity } from '../roles/role.entity';
 import { RoleType } from '../roles/roletype.enum';
+import { EntityStatus } from '../shared/entity-status.enum';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
 
   async getAll(): Promise<UserEntity[]> {
     const users: UserEntity[] = await this.userRepository.find({
-      where: { status: 'ACTIVE' },
+      where: { status: EntityStatus.ACTIVE },
     });
 
     return users;
@@ -31,7 +32,7 @@ export class UserService {
     }
 
     const user: UserEntity = await this.userRepository.findOne(id, {
-      where: { status: 'ACTIVE' },
+      where: { status: EntityStatus.ACTIVE },
     });
 
     if (!user) {
@@ -60,14 +61,36 @@ export class UserService {
   }
 
   async delete(id: number): Promise<void> {
-    const userExists: UserEntity = await this.userRepository.findOne(id, {
-      where: { status: 'ACTIVE' },
+    const userExist: UserEntity = await this.userRepository.findOne(id, {
+      where: { status: EntityStatus.ACTIVE },
     });
 
-    if (!userExists) {
+    if (!userExist) {
       throw new NotFoundException();
     }
 
-    await this.userRepository.update(id, { status: 'INACTIVE' });
+    await this.userRepository.update(id, { status: EntityStatus.INACTIVE });
+  }
+
+  async setRoleToUser(userId: number, roleId: number): Promise<void> {
+    const userExist: UserEntity = await this.userRepository.findOne(userId, {
+      where: { status: EntityStatus.ACTIVE },
+    });
+
+    if (!userExist) {
+      throw new NotFoundException('User does not exist');
+    }
+
+    const roleExist: RoleEntity = await this.roleRepository.findOne(roleId, {
+      where: { status: EntityStatus.ACTIVE },
+    });
+
+    if (!roleExist) {
+      throw new NotFoundException('Role does not exist');
+    }
+
+    userExist.roles.push(roleExist);
+
+    await this.userRepository.save(userExist);
   }
 }
