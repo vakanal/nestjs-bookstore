@@ -15,6 +15,7 @@ import { UserEntity } from './user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from 'src/roles/decorators/role.decorator';
 import { RoleGuard } from '../roles/guards/role.guard';
+import { RoleType } from '../roles/roletype.enum';
 
 @Controller('users')
 export class UserController {
@@ -28,7 +29,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @Roles('ADMINISTRATOR', 'AUTHOR')
+  @Roles(RoleType.ADMINISTRATOR, RoleType.AUTHOR)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
     const user = await this.userService.get(id);
