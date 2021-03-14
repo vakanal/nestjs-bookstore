@@ -4,8 +4,8 @@
   "compilerOptions": {
     "assets": [
       {
-        "include": "../config/*.yaml",
-        "outDir": "./dist/config",
+        "include": "./*.yaml",
+        "outDir": "./dist",
         "watchAssets": true
       }
     ]

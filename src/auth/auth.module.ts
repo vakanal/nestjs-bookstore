@@ -7,8 +7,8 @@ import { AuthRepository } from './auth.repository';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { AuthConfigService } from '../../config/authConfigService';
-import { JwtConfigService } from '../../config/jwtConfigService';
+import { AuthConfigService } from '../../config/services/auth-config.service';
+import { JwtConfigService } from '../../config/services/jwt-config.service';
 
 @Module({
   imports: [
