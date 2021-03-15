@@ -1,6 +1,7 @@
-import { Exclude, Expose, Type } from 'class-transformer';
 import { IsNumber, IsEmail } from 'class-validator';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { ReadUserDetailsDto } from '../../users-details/dtos';
+import { ReadRoleDto } from '../../roles/dtos';
 
 @Exclude()
 export class ReadUserDto {
@@ -19,4 +20,8 @@ export class ReadUserDto {
   @Expose()
   @Type(() => ReadUserDetailsDto)
   details: ReadUserDetailsDto;
+
+  @Expose()
+  @Type(() => ReadRoleDto)
+  roles: ReadRoleDto[];
 }
