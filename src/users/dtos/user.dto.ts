@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-import { UserDetailsEntity } from '../users-details/user-details.entity';
-import { RoleType } from '../roles/roletype.enum';
+import { UserDetailsEntity } from '../../users-details/user-details.entity';
+import { RoleType } from '../../roles/roletype.enum';
 
 export class UserDto {
   @IsNotEmpty()

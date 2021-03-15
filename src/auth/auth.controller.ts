@@ -14,13 +14,13 @@ export class AuthController {
 
   @Post('signup')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async signup(@Body() signupDto: SignUpDto): Promise<void> {
+  signup(@Body() signupDto: SignUpDto): Promise<void> {
     return this.authService.signup(signupDto);
   }
 
   @Post('signin')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async signin(@Body() signinDto: SignInDto): Promise<{ token: string }> {
+  signin(@Body() signinDto: SignInDto): Promise<{ token: string }> {
     return this.authService.signin(signinDto);
   }
 }
