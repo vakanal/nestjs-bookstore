@@ -18,7 +18,6 @@ import { AuthModule } from './auth/auth.module';
       // load: [configuration], // * dotenv mode
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
     UserModule,
