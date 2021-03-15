@@ -1,4 +1,3 @@
-// import configOld from '../config/config.old'; // * dotenv mode
 import config from '../config/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -14,17 +13,13 @@ import { AuthModule } from './auth/auth.module';
       cache: true,
       isGlobal: true,
       load: [config],
-      // envFilePath: ['.env.development'], // * dotenv mode
-      // load: [configuration], // * dotenv mode
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
-    UserModule,
-    RoleModule,
     AuthModule,
+    RoleModule,
+    UserModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
