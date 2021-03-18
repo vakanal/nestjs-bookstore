@@ -9,13 +9,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { BookService } from './book.service';
 import { ReadBookDto, CreateBookDto, UpdateBookDto } from './dtos';
 import { Roles } from '../roles/decorators/role.decorator';
 import { RoleType } from '../roles/roletype.enum';
 import { RoleGuard } from '../roles/guards/role.guard';
 import { GetUser } from '../users/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('book')
 export class BookController {
@@ -40,14 +40,14 @@ export class BookController {
 
   @Post()
   @Roles(RoleType.AUTHOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   create(@Body() book: CreateBookDto): Promise<ReadBookDto> {
     return this.bookService.create(book);
   }
 
   @Post()
   @Roles(RoleType.AUTHOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   createByAuthor(
     @Body() book: CreateBookDto,
     @GetUser('id') authorId: number,
