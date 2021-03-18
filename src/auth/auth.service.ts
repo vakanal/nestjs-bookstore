@@ -5,12 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { plainToClass } from 'class-transformer';
+import { compare } from 'bcrypt';
 import { AuthRepository } from './auth.repository';
 import { UserEntity } from '../users/user.entity';
-import { SignUpDto, SignInDto } from './dtos';
-import { compare } from 'bcrypt';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { RoleType } from '../roles/roletype.enum';
+import { SignUpDto, SignInDto, LoggedInDto } from './dtos';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
     return this.authRepository.signup(signUpDto);
   }
 
-  async signin(signinDto: SignInDto): Promise<{ token: string }> {
+  async signin(signinDto: SignInDto): Promise<LoggedInDto> {
     const { username, password } = signinDto;
 
     const user: UserEntity = await this.authRepository.findOne({
@@ -57,8 +58,8 @@ export class AuthService {
       roles: user.roles.map((role) => role.name as RoleType),
     };
 
-    return {
-      token: this.jwtService.sign(payload),
-    };
+    const token: string = this.jwtService.sign(payload);
+
+    return plainToClass(LoggedInDto, { token, user });
   }
 }
